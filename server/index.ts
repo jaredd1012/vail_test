@@ -1,6 +1,7 @@
 import cors from 'cors';
 import express from 'express';
 
+import { config } from './config.js';
 import { pingRouter } from './routes/ping.js';
 
 const app = express();
@@ -11,5 +12,7 @@ app.use(express.json());
 app.use(pingRouter);
 
 app.listen(port, () => {
-  console.log(`API listening on http://localhost:${port}`);
+  console.log(
+    `API listening on http://localhost:${port} [env=${config.env}, version=${config.version}]`,
+  );
 });

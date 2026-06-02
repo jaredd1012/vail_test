@@ -11,7 +11,6 @@ const CHAT_WINDOW_HEIGHT =
   'calc(100dvh - 56px - 56px - var(--mantine-spacing-md) * 2)'
 
 export function ChatWindow() {
-  const [hasRequested, setHasRequested] = useState(false)
   const [messages, setMessages] = useState<ChatMessage[]>([])
 
   const pingMutation = usePing()
@@ -20,8 +19,6 @@ export function ChatWindow() {
     if (pingMutation.isPending) {
       return
     }
-
-    setHasRequested(true)
 
     // call tanstack mutation hook to call the ping endpoint create succes message and error message
     try {
@@ -41,14 +38,13 @@ export function ChatWindow() {
   }
 
   function handleReset() {
-    setHasRequested(false)
     //set the messages to an empty array
     setMessages([])
     //clear the query cache
     pingMutation.reset()
   }
 
-  const canRetry = hasRequested && !pingMutation.isPending
+  const canRetry = pingMutation.isError && !pingMutation.isPending
 
   return (
     <Paper

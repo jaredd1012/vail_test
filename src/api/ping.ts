@@ -1,4 +1,5 @@
 import { apiBaseUrl } from '../lib/apiBase'
+import { validatePingMessage } from '../lib/validatePingMessage'
 import type { PingRequest, PingResponse } from '../types/ping'
 
 export const DEFAULT_PING_MESSAGE = 'ping'
@@ -6,6 +7,11 @@ export const DEFAULT_PING_MESSAGE = 'ping'
 export async function postPing(
   message: string = DEFAULT_PING_MESSAGE,
 ): Promise<PingResponse> {
+  const validationError = validatePingMessage(message)
+  if (validationError) {
+    throw new Error(validationError)
+  }
+
   const body: PingRequest = { message }
 
   let response: Response
@@ -25,7 +31,18 @@ export async function postPing(
   // throw an error if the response is not ok(400, 404, 500, etc.)
   if (!response.ok) {
     const errorText = await response.text()
-    throw new Error(errorText || `Request failed with status ${response.status}`)
+    let message = errorText || `Request failed with status ${response.status}`
+
+    try {
+      const parsed = JSON.parse(errorText) as { error?: string }
+      if (parsed.error) {
+        message = parsed.error
+      }
+    } catch {
+      // Response body is not JSON; use raw text.
+    }
+
+    throw new Error(message)
   }
 
   return response.json() as Promise<PingResponse>

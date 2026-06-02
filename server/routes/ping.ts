@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import { config } from '../config.js';
+import { validatePingMessage } from '../lib/validatePingMessage.js';
 
 export const pingRouter = Router();
 
@@ -14,14 +15,21 @@ pingRouter.post('/ping', async (req, res) => {
     return;
   }
 
+  const validationError = validatePingMessage(message);
+  if (validationError) {
+    res.status(400).json({ error: validationError });
+    return;
+  }
+
+  // this is a delay to simulate a real-world scenario
   if (config.pingDelayMs > 0) {
     await new Promise((resolve) => setTimeout(resolve, config.pingDelayMs));
   }
 
   res.status(200).json({
-    echo: message, // round-trip the validated payload
-    env: config.env, // deployment target (development | production)
-    timestamp: Math.floor(Date.now() / 1000), // Unix seconds for stable, timezone-free logging
+    echo: message, //  validated payload
+    env: config.env, // deployment target 
+    timestamp: Math.floor(Date.now() / 1000),
     version: config.version, // from VERSION env, default 0.0.0
   });
 });
