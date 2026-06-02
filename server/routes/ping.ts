@@ -1,7 +1,6 @@
 import { Router } from 'express';
 
 import { config } from '../config.js';
-import { validatePingMessage } from '../lib/validatePingMessage.js';
 
 export const pingRouter = Router();
 
@@ -11,13 +10,7 @@ pingRouter.post('/ping', async (req, res) => {
   const { message } = req.body as { message?: unknown };
 
   if (typeof message !== 'string') {
-    res.status(400).json({ error: 'message must be a string' });
-    return;
-  }
-
-  const validationError = validatePingMessage(message);
-  if (validationError) {
-    res.status(400).json({ error: validationError });
+    res.status(400).json({ error: 'invalid message' });
     return;
   }
 
@@ -27,7 +20,7 @@ pingRouter.post('/ping', async (req, res) => {
   }
 
   res.status(200).json({
-    echo: message, //  validated payload
+    echo: message, // request payload
     env: config.env, // deployment target 
     timestamp: Math.floor(Date.now() / 1000),
     version: config.version, // from VERSION env, default 0.0.0

@@ -1,6 +1,7 @@
 import { Paper, Stack } from '@mantine/core'
 import { useState } from 'react'
 import { usePing } from '../../hooks/usePing'
+import { formatErrorMessage } from '../../lib/formatErrorMessage'
 import type { ChatMessage } from '../../types/chat'
 import { ChatActions } from './ChatActions'
 import { ChatHeader } from './ChatHeader'
@@ -28,8 +29,9 @@ export function ChatWindow() {
         createMessage('success', 'Ping succeeded', response),
       ])
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Something went wrong'
+      const errorMessage = formatErrorMessage(
+        error instanceof Error ? error.message : 'something went wrong',
+      )
       setMessages((current) => [
         ...current,
         createMessage('error', errorMessage),
