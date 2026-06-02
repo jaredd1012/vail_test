@@ -1,33 +1,43 @@
-# React + TanStack Query + Mantine Practice
+# Ping Chat
 
-A clean React starter with Mantine UI and TanStack Query wired up.
+A small React chat UI that calls a `/ping` API and displays the response. Built with Vite, Mantine, TanStack Query, and an Express backend.
 
-## Quick start
+## Setup
 
 ```bash
 npm install
+cp .env.example .env
+```
+
+## Run locally
+
+You need two terminals:
+
+```bash
+# Terminal 1 — frontend (http://localhost:3000)
 npm run dev
+
+# Terminal 2 — API (http://localhost:8000)
+npm run server
 ```
 
-Open [http://localhost:5173](http://localhost:5173).
+Open [http://localhost:3000](http://localhost:3000) and click **Ping** to send a request.
 
-## What's included
+## Environment
 
-- **React 19 + TypeScript + Vite**
-- **TanStack Query** — configured in `src/lib/queryClient.ts`
-- **Mantine** — UI components and PostCSS setup
-- **React Router** — home route only
+Server config lives in `.env`:
 
-## Project structure
+| Variable        | Description                          |
+| --------------- | ------------------------------------ |
+| `ENV`           | `development` or `production`        |
+| `VERSION`       | API version returned in ping response |
+| `PING_DELAY_MS` | Optional artificial delay (ms)       |
 
-```
-src/
-  api/          # fetch functions
-  assets/
-  components/   # shared UI (AppLayout)
-  hooks/        # TanStack Query hooks
-  lib/          # QueryClient setup
-  pages/        # route pages (HomePage)
-  routes/       # router config
-  types/        # TypeScript types
-```
+## Scripts
+
+| Command         | Description              |
+| --------------- | ------------------------ |
+| `npm run dev`   | Start Vite dev server    |
+| `npm run server`| Start Express API        |
+| `npm run build` | Build frontend for prod  |
+| `npm run lint`  | Run ESLint               |
