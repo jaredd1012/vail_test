@@ -1,12 +1,12 @@
 import { createBrowserRouter } from 'react-router-dom'
 import { AppLayout } from '../components/AppLayout'
-import { HomePage } from '../pages/HomePage'
+import { ChatPage } from '../pages/ChatPage'
 
 export const router = createBrowserRouter([
   {
     children: [
       {
-        element: <HomePage />,
+        element: <ChatPage />,
         index: true,
       },
     ],
